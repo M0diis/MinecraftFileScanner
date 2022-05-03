@@ -23,6 +23,7 @@ public class Main
     private static final String BASE_URL = "https://discordapp.com/api/webhooks/";
     private static final List<String> RESULTS = new ArrayList<>();
     private static final List<String> JAR_FILES = new ArrayList<>();
+    private static final List<String> POSSIBLE_DETECTIONS = new ArrayList<>();
     
     public static void main(String[] args)
     {
@@ -38,7 +39,59 @@ public class Main
         RESULTS.add(".jar files");
         RESULTS.add(sep);
         RESULTS.addAll(JAR_FILES);
+        
+        RESULTS.add(sep);
+        RESULTS.add("Suspicious files");
+        RESULTS.add(sep);
+        RESULTS.addAll(POSSIBLE_DETECTIONS);
     }
+    
+    private static final String[] CHEAT_CLIENTS = {
+            "sigma",
+            "wurst",
+            "aristois",
+            "meteor",
+            "impact",
+            "inertia",
+            "salhack",
+            "ares",
+            "kamiblue",
+            "wolfram",
+            "liquidbounce",
+            "forgehax",
+            "xray",
+            "x-ray",
+            "astolfo",
+            "moon",
+            "entropy",
+            "iridium",
+            "crypt",
+            "zeroday",
+            "sensation",
+            "crystalware",
+            "deepwater",
+            "sight",
+            "autumn",
+            "isync",
+            "novoline",
+            "remix",
+            "vape",
+            "mathax",
+            "osiris",
+            "raion",
+            "baritone",
+            "future client",
+            "futureclient",
+            "pyro",
+            "yukio",
+            "swaghack",
+            "wolfieclicker",
+            "whiteout",
+            "forcefield",
+            "bhop",
+            "bunnyhop",
+            "noswing"
+    };
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File writeData()
@@ -108,6 +161,19 @@ public class Main
         file.delete();
     }
     
+    private static boolean matchesCheatClient(String path)
+    {
+        for(String cheatClient : CHEAT_CLIENTS)
+        {
+            if(path.contains(cheatClient))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     private static void getResults(String sub)
     {
         String sep = new String(new char[50]).replace("\0", "-");
@@ -152,9 +218,16 @@ public class Main
             
             if(file.isFile())
             {
-                if(file.getName().endsWith(".jar"))
+                String name = file.getName().toLowerCase();
+                
+                if(name.endsWith(".jar") || name.contains(".jar"))
                 {
                     JAR_FILES.add(file.getAbsolutePath().substring(MINECRAFT_DIR.length()));
+                }
+    
+                if(matchesCheatClient(file.getAbsolutePath().toLowerCase()) || matchesCheatClient(name))
+                {
+                    POSSIBLE_DETECTIONS.add(file.getAbsolutePath().substring(MINECRAFT_DIR.length()));
                 }
                 
                 process(file.getAbsolutePath());
@@ -243,10 +316,14 @@ public class Main
             }
         });
         
-        // get resource ico.png
         URL url = Main.class.getResource("/ico.png");
-        ImageIcon icon = new ImageIcon(url);
         
-        f.setIconImage(icon.getImage());
+        if(url != null)
+        {
+            ImageIcon icon = new ImageIcon(url);
+    
+            f.setIconImage(icon.getImage());
+        }
+        
     }
 }
