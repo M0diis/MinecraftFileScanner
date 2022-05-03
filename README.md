@@ -12,6 +12,11 @@ Once the button is clicked, the data will be read from the specified minecraft f
 
 ![image](https://user-images.githubusercontent.com/53468997/166491869-554ec9bc-f437-446c-b8c2-13b2ce6f9d89.png)
 
+Current scanned directories:
+- %APPDATA%/.minecraft/mods
+- %APPDATA%/.minecraft/versions
+- %APPDATA%/.minecraft/config
+
 ### Building
 To build the tool you need JDK 8 or higher and Gradle installed on your system.
 
