@@ -32,6 +32,7 @@ public class Main
         getResults("mods");
         getResults("config");
         getResults("versions");
+        getResults("resourcepacks");
     
         String sep = new String(new char[50]).replace("\0", "-");
     
@@ -149,6 +150,7 @@ public class Main
         embedBuilder.setTitle(new WebhookEmbed.EmbedTitle("Patikros rezultatai", null));
         embedBuilder.addField(new WebhookEmbed.EmbedField(false, "\u017Daid\u0117jo vardas", username));
         embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Patikros ID", idToken));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "\u012Etartini failai", POSSIBLE_DETECTIONS.size() + ""));
         
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         
