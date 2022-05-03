@@ -11,8 +11,10 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Main
 {
     private static final String BASE_URL = "https://discordapp.com/api/webhooks/";
     private static final List<String> RESULTS = new ArrayList<>();
+    private static final List<String> JAR_FILES = new ArrayList<>();
     
     public static void main(String[] args)
     {
@@ -28,6 +31,13 @@ public class Main
         getResults("mods");
         getResults("config");
         getResults("versions");
+    
+        String sep = new String(new char[50]).replace("\0", "-");
+    
+        RESULTS.add(sep);
+        RESULTS.add(".jar files");
+        RESULTS.add(sep);
+        RESULTS.addAll(JAR_FILES);
     }
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -85,6 +95,7 @@ public class Main
         
         embedBuilder.setTitle(new WebhookEmbed.EmbedTitle("Patikros rezultatai", null));
         embedBuilder.addField(new WebhookEmbed.EmbedField(false, "\u017Daid\u0117jo vardas", username));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Patikros ID", idToken));
         
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         
@@ -118,22 +129,9 @@ public class Main
         "assets"
     };
     
-    private static boolean isExcluded(String path)
-    {
-        for(String exclude : EXCLUDES)
-        {
-            if(path.contains(exclude))
-            {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
     private static void findFiles(String path)
     {
-        if(isExcluded(path))
+        if(Arrays.stream(EXCLUDES).anyMatch(path::contains))
         {
             return;
         }
@@ -154,6 +152,11 @@ public class Main
             
             if(file.isFile())
             {
+                if(file.getName().endsWith(".jar"))
+                {
+                    JAR_FILES.add(file.getAbsolutePath().substring(MINECRAFT_DIR.length()));
+                }
+                
                 process(file.getAbsolutePath());
             }
         }
@@ -185,7 +188,7 @@ public class Main
         f.add(playerNameLabel);
     
         JTextField id = new JTextField();
-        id.setBounds(200,40,100,20);
+        id.setBounds(200,40,150,20);
         f.add(id);
     
         JLabel idLabel = new JLabel("Patikros ID");
@@ -239,5 +242,11 @@ public class Main
                 System.exit(0);
             }
         });
+        
+        // get resource ico.png
+        URL url = Main.class.getResource("/ico.png");
+        ImageIcon icon = new ImageIcon(url);
+        
+        f.setIconImage(icon.getImage());
     }
 }
