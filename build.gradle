@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group 'me.m0dii'
+version '1.0'
+
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.m0dii.Main'
+    }
+}
+
+shadowJar {
+    minimize()
+
+    archiveFileName = "MCSlime-Patikra-${version}.jar"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        url 'https://jitpack.io'
+    }
+
+}
+
+dependencies {
+    implementation("club.minnced:discord-webhooks:0.8.0")
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
